@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Letra de Caderno</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Kalam&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+          :root { --cor: #4f46e5; --cor2: #4338ca; --fundo: #f1f3f9; --borda: #e2e5ef; --txt: #1f2433; --suave: #667085; }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 0 12px 48px; font: 17px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--fundo); color: var(--txt); }
+      [hidden] { display: none !important; }
+      h1 { font-size: 26px; margin: 0 0 8px; }
+      h2 { font-size: 20px; margin: 22px 0 6px; }
+      a { color: var(--cor); }
+
+      /* Topo e menu */
+      .topo { margin: 0 -12px 12px; background: #fff; border-bottom: 1px solid var(--borda); }
+      .topo-in { max-width: 728px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+      .marca { font-weight: 800; font-size: 20px; color: var(--cor); }
+      #conta { display: flex; align-items: center; flex-wrap: wrap; font-size: 15px; color: var(--suave); }
+      #conta button { margin: 0 0 0 8px; padding: 8px 14px; }
+      .email { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .nav { position: sticky; top: 0; z-index: 10; display: flex; gap: 8px; max-width: 728px; margin: 0 auto 14px; padding: 8px 0; background: var(--fundo); }
+      .nav button { flex: 1; margin: 0; padding: 12px 6px; font-size: 15px; border: 0; background: #fff; color: var(--suave); font-weight: 600; border-radius: 999px; box-shadow: 0 1px 3px rgba(30, 40, 80, 0.1); }
+      .nav button[aria-current="page"] { background: var(--cor); color: #fff; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35); }
+
+      /* Cartões e botões */
+      .area { max-width: 728px; margin: 0 auto 24px; padding: 20px; background: #fff; border: 1px solid var(--borda); border-radius: 16px; box-shadow: 0 4px 18px rgba(30, 40, 80, 0.06); }
+      button, select { font: inherit; font-size: 16px; margin: 8px 8px 0 0; padding: 11px 18px; border-radius: 10px; cursor: pointer; transition: transform 0.05s; }
+      button:active { transform: scale(0.97); }
+      select { background: #fff; border: 1.5px solid var(--borda); color: var(--txt); }
+      .cor { color: #fff; border: 0; font-weight: 600; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18); }
+      .sec { background: #fff; color: var(--cor); border: 2px solid var(--cor); }
+      .prim { background: var(--cor); color: #fff; border: 2px solid var(--cor); font-weight: 600; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+      .prim:hover { background: var(--cor2); }
+      :focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+      #texto { min-height: 150px; padding: 14px; font-size: 17px; background: #fbfcff; border: 1.5px solid var(--borda); border-radius: 12px; color: #1537a8; overflow-wrap: break-word; }
+      #texto:focus { outline: none; border-color: var(--cor); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
+      details { background: #f7f8fc; border: 1px solid var(--borda); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
+      summary { cursor: pointer; font-weight: 600; }
+      details label { display: inline-block; margin: 8px 12px 0 0; }
+      details input[type="number"], #teste { padding: 8px; border: 1.5px solid var(--borda); border-radius: 8px; font: inherit; }
+      details input[type="number"] { width: 78px; }
+      #teste { width: 100%; font-size: 18px; }
+      progress { width: 100%; height: 14px; accent-color: var(--cor); }
+      #grande { font-size: 56px; font-weight: 700; margin-right: 12px; color: var(--cor); }
+      #quadro {
+        display: block; width: 100%; max-width: 640px; aspect-ratio: 2 / 1;
+        touch-action: none; cursor: crosshair; border-radius: 12px; box-shadow: 0 0 0 2px var(--borda), 0 4px 14px rgba(30, 40, 80, 0.08); background-color: #fff;
+        background-image:
+          linear-gradient(transparent 39.4%, #64b5f6 39.4%, #64b5f6 40.6%, transparent 40.6%),
+          linear-gradient(transparent 71.2%, #e57373 71.2%, #e57373 72.8%, transparent 72.8%);
+      }
+      #aviso { font-weight: 600; min-height: 1.5em; }
+      #atualImg { height: 48px; vertical-align: middle; background: #fff; border: 1px solid var(--borda); border-radius: 6px; }
+      #saida { background: #fbfcff; border: 1.5px solid var(--borda); border-radius: 12px; padding: 12px; min-height: 70px; margin-top: 8px; }
+      #saida img { height: 48px; vertical-align: -13px; }
+
+      /* Janela de login */
+      dialog { border: 0; border-radius: 18px; padding: 24px; max-width: 380px; width: calc(100% - 32px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+      dialog::backdrop { background: rgba(20, 25, 50, 0.55); }
+      dialog label { display: block; font-weight: 600; margin-top: 10px; }
+      dialog input { width: 100%; padding: 12px; margin-top: 4px; border: 1.5px solid var(--borda); border-radius: 10px; font: inherit; }
+
+      /* ---------- As folhas ---------- */
+      #folhas {
+        --esp: 7mm; --topo: 32mm; --esq: 10mm; --dir: 12mm; --tam: 0.95; --n: 36;
+        --gh: calc(var(--esp) * var(--tam) * 1.3);
+        font-family: var(--fonte, "Caveat"), "Caveat", cursive;
+        font-size: calc(var(--esp) * var(--tam));
+        line-height: var(--esp);
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .pagina { width: 210mm; height: 296mm; margin: 0 auto 8mm; padding: var(--topo) var(--dir) 0 var(--esq); background: #fff; overflow: hidden; break-after: page; box-shadow: 0 6px 24px rgba(30, 40, 80, 0.15); border-radius: 4px; }
+      .janela { height: calc(var(--n) * var(--esp)); overflow: hidden; }
+      .caderno .janela { background-image: linear-gradient(transparent calc(100% - 0.3mm), #8a8f8a 0); background-size: 100% var(--esp); }
+      .pautada .janela { background-image: linear-gradient(transparent calc(100% - 0.3mm), #90caf9 0); background-size: 100% var(--esp); }
+      .quadriculada .janela {
+        background-image: linear-gradient(transparent calc(100% - 0.3mm), #90caf9 0), linear-gradient(90deg, transparent calc(100% - 0.3mm), #90caf9 0);
+        background-size: var(--esp) var(--esp);
+      }
+      .g { display: inline-block; height: var(--gh); margin: calc(var(--gh) * -0.72) 0 calc(var(--gh) * -0.28); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; background-color: currentColor; }
+      .frac { display: inline-block; text-align: center; white-space: nowrap; padding: 0 0.2em; }
+      .frac .num, .frac .den { display: block; }
+      .frac .num { background: linear-gradient(currentColor, currentColor) bottom / 100% 0.3mm no-repeat; }
+      .sup, .sub { font-size: 0.65em; line-height: 0; position: relative; --gh: calc(var(--esp) * var(--tam) * 0.85); }
+      .sup { top: -0.55em; }
+      .sub { top: 0.3em; }
+      .rad { border-top: 0.3mm solid currentColor; }
+
+      @page { size: A4; margin: 0; }
+      @media print {
+        body { background: none; padding: 0; }
+        .topo, .nav, .area { display: none; }
+        .pagina { margin: 0; box-shadow: none; border-radius: 0; }
+        .pagina:last-child { break-after: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Menu principal">
+      <button data-v="gerar">📝 Gerar folha</button>
+      <button data-v="letra">✍️ Criar minha letra</button>
+      <button data-v="ajuda">❓ Ajuda / tutorial</button>
+    </nav>
+
+    <!-- ================= GERAR FOLHA ================= -->
+    <section id="v-gerar">
+      <div class="area">
+        <p>Primeira vez aqui? <button class="sec" data-v="ajuda" style="margin: 0">Ver o passo a passo</button></p>
+        <p>Escreva abaixo. Selecione um trecho e clique numa cor de caneta.</p>
+        <div id="texto" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Texto da folha"></div>
+
+        <button class="cor" style="background: #1537a8" data-cor="#1537a8">Azul</button>
+        <button class="cor" style="background: #1a1a1a" data-cor="#1a1a1a">Preto</button>
+        <button class="cor" style="background: #c8102e" data-cor="#c8102e">Vermelho</button>
+        <br />
+        <label>Letra: <select id="qualLetra"></select></label>
+        <label>Folha:
+          <select id="papel">
+            <option value="caderno">Caderno (cinza)</option>
+            <option value="pautada">Pautada (azul)</option>
+            <option value="quadriculada">Quadriculada</option>
+            <option value="branca">Branca (sem linhas)</option>
+          </select>
+        </label>
+        <br />
+        <button id="gerar" class="prim">Gerar folha</button>
+        <button id="imprimir" class="sec">Imprimir / Salvar PDF</button>
+
+        <details>
+          <summary>Como escrever contas de matemática</summary>
+          <p>
+            Fração: {1/2} ou {x+1/3}<br />
+            Potência: x^2 ou x^(n+1)<br />
+            Índice: H_2O<br />
+            Raiz: √(x+1) (copie o símbolo √ daqui)<br />
+            Números, + − = e parênteses: digite normalmente.<br />
+            A linha que tem fração ocupa duas linhas do caderno.
+          </p>
+        </details>
+        <details>
+          <summary>Ajustar medidas</summary>
+          <label>Espaço entre linhas (mm) <input type="number" id="esp" value="7" step="0.1" /></label>
+          <label>Margem do topo (mm) <input type="number" id="topo" value="32" step="0.5" /></label>
+          <label>Margem esquerda (mm) <input type="number" id="esq" value="10" step="0.5" /></label>
+          <label>Margem direita (mm) <input type="number" id="dir" value="12" step="0.5" /></label>
+          <label>Tamanho da letra (%) <input type="number" id="tam" value="95" step="1" /></label>
+          <label>Subir/descer letra (mm) <input type="number" id="sobe" value="0" step="0.1" /></label>
+        </details>
+      </div>
+      <div id="folhas" class="caderno"></div>
+    </section>
+
+    <!-- ================= CRIAR MINHA LETRA ================= -->
+    <section id="v-letra" hidden>
+      <div class="area">
+        <h1>Criar a minha letra</h1>
+        <p>Sem impressora e sem foto: escreva cada caractere com o dedo, a caneta do tablet ou o mouse. Cada um é salvo na hora, então dá para parar e continuar depois. As 62 primeiras (letras e números) já bastam.</p>
+        <details open>
+          <summary>Como escrever</summary>
+          <ul>
+            <li>Escreva o caractere pedido dentro da caixa branca.</li>
+            <li>Minúsculas ficam entre a linha <strong>azul</strong> (em cima) e a <strong>vermelha</strong> (embaixo). Letras altas (b, d, f, h, k, l, t) e maiúsculas sobem acima da azul. Letras com perna (g, j, p, q, y) descem abaixo da vermelha.</li>
+            <li>Errou? Clique em <strong>Apagar</strong>. Para refazer uma letra, volte até ela e escreva de novo.</li>
+          </ul>
+        </details>
+
+        <p id="progresso" aria-live="polite"></p>
+        <progress id="barra" value="0"></progress>
+        <h2 id="pedido" aria-live="polite">Escreva: <span id="grande"></span><span id="desc"></span></h2>
+        <canvas id="quadro" width="640" height="320" aria-label="Área para escrever a letra com o dedo ou o mouse"></canvas>
+        <p id="atual" hidden>Já salva: <img id="atualImg" alt="letra já salva" /> (se escrever de novo, ela será trocada)</p>
+        <p id="aviso" role="status" aria-live="polite"></p>
+        <button id="proxima" class="prim">Salvar e próxima ▶</button>
+        <button id="apagar" class="sec">Apagar ✕</button>
+        <button id="voltar" class="sec">◀ Voltar</button>
+        <button id="pular" class="sec">Pular ▶▶</button>
+
+        <h2>Teste</h2>
+        <label for="teste">Digite uma frase:</label>
+        <input id="teste" value="Olá, esta é a minha letra!" />
+        <div id="saida" aria-live="polite"></div>
+        <p>
+          <button id="usarAgora" class="prim">Usar a minha letra agora</button>
+          <button id="limpar" class="sec">Apagar todas as minhas letras</button>
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= AJUDA ================= -->
+    <section id="v-ajuda" hidden>
+      <div class="area">
+        <h1>Ajuda / tutorial</h1>
+        <details open>
+          <summary>Começo rápido (4 passos)</summary>
+          <ol>
+            <li>Na aba <strong>Gerar folha</strong>, escreva ou cole o seu texto na caixa.</li>
+            <li>Escolha a <strong>Letra</strong> (uma letra pronta ou a sua) e o tipo de <strong>Folha</strong>.</li>
+            <li>Clique em <strong>Gerar folha</strong>. O resultado aparece embaixo.</li>
+            <li>Clique em <strong>Imprimir / Salvar PDF</strong>. Na janela que abrir, escolha a sua impressora ou <strong>Salvar como PDF</strong>.</li>
+          </ol>
+        </details>
+        <details>
+          <summary>Usar a minha própria letra</summary>
+          <ol>
+            <li>Abra a aba <strong>Criar minha letra</strong>.</li>
+            <li>Escreva cada caractere pedido na caixa e clique em <strong>Salvar e próxima</strong>.</li>
+            <li>Quando quiser, clique em <strong>Usar a minha letra agora</strong>.</li>
+          </ol>
+          <p>Ela fica salva só neste navegador e neste computador. Se um caractere não foi criado, o site usa uma letra padrão para ele.</p>
+        </details>
+        <details>
+          <summary>Cores de caneta</summary>
+          <p>Selecione um trecho do texto (com o mouse ou o dedo) e clique em <strong>Azul</strong>, <strong>Preto</strong> ou <strong>Vermelho</strong>. Só o trecho selecionado muda de cor.</p>
+        </details>
+        <details>
+          <summary>Contas de matemática</summary>
+          <p>
+            Fração: {1/2} ou {x+1/3}<br />
+            Potência: x^2 ou x^(n+1)<br />
+            Índice: H_2O<br />
+            Raiz: √(x+1)<br />
+            Os números e os sinais + − = ( ) saem na sua letra se você os criou.
+          </p>
+        </details>
+        <details>
+          <summary>Fazer a letra cair nas linhas do meu caderno</summary>
+          <ol>
+            <li>Com uma régua, meça a distância entre duas linhas do caderno e coloque em <strong>Ajustar medidas &gt; Espaço entre linhas</strong>.</li>
+            <li>Meça do topo da folha até a primeira linha onde você escreveria. Coloque esse valor <strong>menos o espaço entre linhas</strong> em <strong>Margem do topo</strong>.</li>
+            <li>Ajuste a <strong>Margem esquerda</strong>, o <strong>Tamanho da letra</strong> e o <strong>Subir/descer letra</strong> até a letra assentar nas linhas.</li>
+            <li>Para imprimir direto na folha do caderno, escolha a folha <strong>Branca</strong>. Teste antes em papel comum, contra a luz.</li>
+          </ol>
+        </details>
+        <details>
+          <summary>Imprimir direito</summary>
+          <p>Na janela de impressão do Chrome, deixe <strong>Margens: Nenhuma</strong>, <strong>Escala: 100%</strong> e marque <strong>Gráficos de plano de fundo</strong>. Sem impressora, salve como PDF e leve a uma papelaria ou lan house.</p>
+        </details>
+        <details>
+          <summary>Algo deu errado</summary>
+          <ul>
+            <li><strong>A letra ficou grande ou pequena:</strong> mude o <strong>Tamanho da letra</strong> nas medidas.</li>
+            <li><strong>Nada aparece ao gerar:</strong> escreva algo na caixa e clique em Gerar folha de novo.</li>
+            <li><strong>A tela rola quando escrevo a letra:</strong> comece o traço dentro da caixa branca.</li>
+            <li><strong>Sumiram as minhas letras:</strong> elas ficam salvas no navegador. Se você limpou os dados do navegador, será preciso criá-las de novo.</li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const AZUL = "#1537a8";
+      const ALTURA = 296; // altura da página em mm
+      const FONTES = ["Caveat", "Kalam", "Patrick Hand", "Indie Flower", "Shadows Into Light"];
+      const texto = $("texto");
+      const folhas = $("folhas");
+      const num = (id) => Number($(id).value);
+      let gerado = false, sobe = 0, usar = false, glifos = {};
+      try { glifos = JSON.parse(localStorage.getItem("minhaLetra")) || {}; } catch (e) {}
+
+      // ---------- Menu ----------
+      function ver(nome) {
+        for (const v of ["gerar", "letra", "ajuda"]) $("v-" + v).hidden = v !== nome;
+        document.querySelectorAll(".nav button").forEach((b) =>
+          b.setAttribute("aria-current", b.dataset.v === nome ? "page" : "false"));
+        window.scrollTo(0, 0);
+      }
+      document.querySelectorAll("[data-v]").forEach((b) => b.addEventListener("click", () => ver(b.dataset.v)));
+
+      // ---------- Cores de caneta ----------
+      document.execCommand("styleWithCSS", false, true);
+      document.querySelectorAll(".cor").forEach((botao) => {
+        botao.addEventListener("mousedown", (e) => e.preventDefault());
+        botao.addEventListener("click", () => {
+          texto.focus();
+          document.execCommand("foreColor", false, botao.dataset.cor);
+        });
+      });
+      texto.addEventListener("paste", (e) => {
+        e.preventDefault();
+        document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
+      });
+
+      // ---------- Lê o texto com a cor de cada letra ----------
+      function ler(no, cor, saida) {
+        if (no.nodeType === 3) {
+          for (const c of no.textContent) saida.push({ c, cor });
+          return;
+        }
+        if (no.nodeName === "BR") {
+          saida.push({ c: "\n", cor });
+          return;
+        }
+        const nova = no.style && no.style.color ? no.style.color : cor;
+        const bloco = no.nodeName === "DIV" || no.nodeName === "P";
+        if (bloco && saida.length && saida[saida.length - 1].c !== "\n") saida.push({ c: "\n", cor });
+        no.childNodes.forEach((filho) => ler(filho, nova, saida));
+      }
+
+      // ---------- Transforma as letras em elementos ----------
+      function fechar(l, i, abre, fecha) {
+        let nivel = 0;
+        for (let j = i; j < l.length; j++) {
+          if (l[j].c === abre) nivel++;
+          if (l[j].c === fecha) {
+            nivel--;
+            if (nivel === 0) return j;
+          }
+        }
+        return -1;
+      }
+      function barra(l) {
+        let nivel = 0;
+        for (let j = 0; j < l.length; j++) {
+          if (l[j].c === "{") nivel++;
+          if (l[j].c === "}") nivel--;
+          if (l[j].c === "/" && nivel === 0) return j;
+        }
+        return -1;
+      }
+
+      // Uma letra: a sua (imagem) ou da fonte
+      function letra(c, cor) {
+        const g = usar && glifos[c];
+        const s = document.createElement("span");
+        s.style.color = cor;
+        s.style.position = "relative";
+        s.style.top = Math.random() * 0.6 - 0.3 + sobe + "mm";
+        if (!g) {
+          s.textContent = c;
+          return s;
+        }
+        s.className = "g";
+        s.style.width = "calc(var(--gh) * " + g.a + ")";
+        s.style.webkitMaskImage = s.style.maskImage = "url('" + g.u + "')";
+        const caixa = document.createElement("span");
+        caixa.append(s, "\u2060"); // impede quebrar a palavra no meio
+        return caixa;
+      }
+
+      function grupo(classe, itens, cor) {
+        const s = document.createElement("span");
+        s.className = classe;
+        if (cor) s.style.color = cor;
+        montar(itens, s);
+        return s;
+      }
+
+      function montar(l, destino) {
+        for (let i = 0; i < l.length; i++) {
+          const { c, cor } = l[i];
+          if (c === "\n") {
+            destino.appendChild(document.createTextNode("\n"));
+            continue;
+          }
+          if (c === "{") { // fração {a/b}
+            const fim = fechar(l, i, "{", "}");
+            const dentro = fim > i ? l.slice(i + 1, fim) : [];
+            const b = barra(dentro);
+            if (b > 0 && b < dentro.length - 1) {
+              const frac = document.createElement("span");
+              frac.className = "frac";
+              frac.style.color = dentro[0].cor;
+              frac.appendChild(grupo("num", dentro.slice(0, b)));
+              frac.appendChild(grupo("den", dentro.slice(b + 1)));
+              destino.appendChild(frac);
+              i = fim;
+              continue;
+            }
+          }
+          if ((c === "^" || c === "_") && i + 1 < l.length && !/\s/.test(l[i + 1].c)) { // x^2 e H_2
+            let fim, itens;
+            if (l[i + 1].c === "(") {
+              fim = fechar(l, i + 1, "(", ")");
+              itens = fim > i + 2 ? l.slice(i + 2, fim) : null;
+            } else {
+              fim = i + 1;
+              if (/[0-9]/.test(l[fim].c)) while (fim + 1 < l.length && /[0-9]/.test(l[fim + 1].c)) fim++;
+              itens = l.slice(i + 1, fim + 1);
+            }
+            if (itens) {
+              destino.appendChild(grupo(c === "^" ? "sup" : "sub", itens));
+              i = fim;
+              continue;
+            }
+          }
+          if (c === "√" && i + 1 < l.length && l[i + 1].c === "(") { // raiz
+            const fim = fechar(l, i + 1, "(", ")");
+            if (fim > i + 2) {
+              destino.appendChild(letra("√", cor));
+              destino.appendChild(grupo("rad", l.slice(i + 2, fim), l[i + 2].cor));
+              i = fim;
+              continue;
+            }
+          }
+          destino.appendChild(letra(c, cor));
+        }
+      }
+
+      // ---------- Páginas ----------
+      function pagina(conteudo, i, linhas) {
+        const pag = document.createElement("div");
+        pag.className = "pagina";
+        const janela = document.createElement("div");
+        janela.className = "janela";
+        conteudo.style.marginTop = "calc(var(--esp) * " + -i * linhas + ")";
+        janela.appendChild(conteudo);
+        pag.appendChild(janela);
+        return pag;
+      }
+
+      async function gerar() {
+        await document.fonts.ready;
+        gerado = true;
+        sobe = num("sobe") || 0;
+        const letras = [];
+        texto.childNodes.forEach((no) => ler(no, AZUL, letras));
+        const conteudo = document.createElement("div");
+        conteudo.className = "texto";
+        montar(letras, conteudo);
+
+        const linhas = Math.max(1, Math.floor((ALTURA - num("topo") - 8) / num("esp")));
+        folhas.style.setProperty("--n", linhas);
+        folhas.innerHTML = "";
+        folhas.appendChild(pagina(conteudo, 0, linhas));
+
+        const espPx = parseFloat(getComputedStyle(conteudo).lineHeight);
+        const total = Math.max(1, Math.ceil(Math.round(conteudo.offsetHeight / espPx) / linhas));
+        for (let i = 1; i < total; i++) folhas.appendChild(pagina(conteudo.cloneNode(true), i, linhas));
+      }
+      $("gerar").addEventListener("click", gerar);
+      $("imprimir").addEventListener("click", () => window.print());
+      $("papel").addEventListener("change", (e) => { folhas.className = e.target.value; });
+
+      function medidas() {
+        for (const nome of ["esp", "topo", "esq", "dir"]) folhas.style.setProperty("--" + nome, num(nome) + "mm");
+        folhas.style.setProperty("--tam", num("tam") / 100);
+      }
+      document.querySelectorAll("#v-gerar details input[type=number]").forEach((campo) =>
+        campo.addEventListener("input", () => { medidas(); if (gerado) gerar(); }));
+      medidas();
+
+      // ---------- Escolher a letra ----------
+      function contagem() {
+        const n = Object.keys(glifos).length, o = $("qualLetra").options[0];
+        o.text = n ? "Minha letra (" + n + " letras)" : "Minha letra (ainda não criada)";
+        o.disabled = !n;
+      }
+      async function escolherLetra(v) {
+        $("qualLetra").value = v;
+        usar = v === "minha";
+        const nome = usar ? "Caveat" : v;
+        folhas.style.setProperty("--fonte", '"' + nome + '"');
+        await document.fonts.load('20px "' + nome + '"');
+        if (gerado) gerar();
+      }
+      $("qualLetra").add(new Option("", "minha"));
+      for (const f of FONTES) $("qualLetra").add(new Option("Letra pronta: " + f, f));
+      contagem();
+      $("qualLetra").value = Object.keys(glifos).length ? "minha" : "Caveat";
+      usar = $("qualLetra").value === "minha";
+      $("qualLetra").addEventListener("change", (e) => escolherLetra(e.target.value));
+
+      // ---------- Escrever a minha letra na tela ----------
+      const CHARS = [..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áàâãéêíóôõúüçÁÀÂÃÉÊÍÓÔÕÚÇ.,;:!?-()/+=×÷%\"'"];
+      const NOMES = { ".": "ponto", ",": "vírgula", ";": "ponto e vírgula", ":": "dois pontos", "!": "exclamação", "?": "interrogação", "-": "traço (hífen ou menos)", "(": "abre parênteses", ")": "fecha parênteses", "/": "barra", "+": "mais", "=": "igual", "×": "vezes", "÷": "dividido", "%": "porcentagem", '"': "aspas", "'": "apóstrofo" };
+      let ci = 0, riscou = false, desenhando = false, ultimo = null;
+      const cv = $("quadro");
+      const cx = cv.getContext("2d", { willReadFrequently: true });
+      cx.lineWidth = 11;
+      cx.lineCap = "round";
+      cx.lineJoin = "round";
+      cx.strokeStyle = "#000";
+      $("barra").max = CHARS.length;
+
+      function pos(e) {
+        const r = cv.getBoundingClientRect();
+        return { x: ((e.clientX - r.left) * cv.width) / r.width, y: ((e.clientY - r.top) * cv.height) / r.height };
+      }
+      function linha(a, b) {
+        cx.beginPath();
+        cx.moveTo(a.x, a.y);
+        cx.lineTo(b.x, b.y);
+        cx.stroke();
+        riscou = true;
+      }
+      cv.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        cv.setPointerCapture(e.pointerId);
+        desenhando = true;
+        ultimo = pos(e);
+        linha(ultimo, ultimo);
+      });
+      cv.addEventListener("pointermove", (e) => {
+        if (!desenhando) return;
+        const p = pos(e);
+        linha(ultimo, p);
+        ultimo = p;
+      });
+      ["pointerup", "pointercancel", "lostpointercapture"].forEach((t) =>
+        cv.addEventListener(t, () => { desenhando = false; }));
+
+      function descricao(ch) {
+        if (NOMES[ch]) return NOMES[ch];
+        if (/[0-9]/.test(ch)) return "número";
+        return ch === ch.toLowerCase() ? "letra minúscula" : "letra MAIÚSCULA";
+      }
+
+      function recortar() {
+        const w = cv.width, h = cv.height;
+        const d = cx.getImageData(0, 0, w, h).data;
+        let x0 = w, x1 = -1;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            if (d[4 * (y * w + x) + 3] > 40) {
+              if (x < x0) x0 = x;
+              if (x > x1) x1 = x;
+            }
+          }
+        }
+        if (x1 < 0) return false;
+        const E = 120 / h; // a letra guardada tem 120 px de altura
+        const ax = Math.max(0, x0 - 10 / E), bx = Math.min(w, x1 + 1 + 10 / E);
+        const out = document.createElement("canvas");
+        out.width = Math.round((bx - ax) * E);
+        out.height = 120;
+        out.getContext("2d").drawImage(cv, ax, 0, bx - ax, h, 0, 0, out.width, 120);
+        glifos[CHARS[ci]] = { u: out.toDataURL("image/png"), a: out.width / 120 };
+        try {
+          localStorage.setItem("minhaLetra", JSON.stringify(glifos));
+        } catch (e) {
+          $("aviso").textContent = "Não consegui salvar: sem espaço no navegador.";
+          return false;
+        }
+        contagem();
+        return true;
+      }
+
+      function ir(n) {
+        ci = Math.max(0, Math.min(CHARS.length - 1, n));
+        cx.clearRect(0, 0, cv.width, cv.height);
+        riscou = false;
+        const ch = CHARS[ci], feitas = Object.keys(glifos).length;
+        $("grande").textContent = ch;
+        $("desc").textContent = "(" + descricao(ch) + ")";
+        $("progresso").textContent = "Caractere " + (ci + 1) + " de " + CHARS.length + " · " + feitas + " salvos";
+        $("barra").value = feitas;
+        $("atual").hidden = !glifos[ch];
+        if (glifos[ch]) $("atualImg").src = glifos[ch].u;
+        $("aviso").textContent = "";
+        teste();
+      }
+
+      $("proxima").onclick = () => {
+        const salvou = riscou;
+        if (riscou) {
+          if (!recortar()) return;
+        } else if (!glifos[CHARS[ci]]) {
+          $("aviso").textContent = "Escreva a letra na caixa antes de continuar (ou clique em Pular).";
+          return;
+        }
+        if (ci === CHARS.length - 1) {
+          ir(ci);
+          $("aviso").textContent = "Pronto! Todas as letras foram salvas.";
+        } else {
+          ir(ci + 1);
+          if (salvou) $("aviso").textContent = "Salva!";
+        }
+      };
+      $("apagar").onclick = () => { cx.clearRect(0, 0, cv.width, cv.height); riscou = false; };
+      $("voltar").onclick = () => ir(ci - 1);
+      $("pular").onclick = () => ir(ci + 1);
+      $("usarAgora").onclick = () => {
+        ver("gerar");
+        escolherLetra("minha");
+      };
+      $("limpar").onclick = () => {
+        if (!confirm("Apagar todas as suas letras salvas?")) return;
+        localStorage.removeItem("minhaLetra");
+        glifos = {};
+        contagem();
+        if (usar) escolherLetra("Caveat");
+        ir(0);
+      };
+
+      function teste() {
+        $("saida").textContent = "";
+        for (const ch of $("teste").value) {
+          const g = glifos[ch];
+          if (g) {
+            const im = new Image();
+            im.src = g.u;
+            im.alt = ch;
+            $("saida").appendChild(im);
+          } else {
+            $("saida").appendChild(document.createTextNode(ch));
+          }
+        }
+      }
+      $("teste").oninput = teste;
+
+      const primeira = CHARS.findIndex((c) => !glifos[c]);
+      ir(primeira < 0 ? 0 : primeira);
+      ver("gerar");
+            // ---------- Ajustes: palavras inteiras e letras mais juntas ----------
+      const montarOriginal = montar;
+      montar = function (l, destino) {
+        montarOriginal(l, destino);
+        if (destino.className !== "texto") return;
+        const palavras = document.createDocumentFragment();
+        let palavra = null;
+        for (const filho of [...destino.childNodes]) {
+          if (filho.nodeType === 3 || /^\s+$/.test(filho.textContent)) {
+            palavra = null;
+            palavras.appendChild(filho);
+          } else {
+            if (!palavra) {
+              palavra = document.createElement("span");
+              palavra.style.whiteSpace = "nowrap";
+              palavras.appendChild(palavra);
+            }
+            palavra.appendChild(filho);
+          }
+        }
+        destino.appendChild(palavras);
+      };
+
+      const estiloFolga = document.createElement("style");
+      estiloFolga.textContent =
+        ".g { margin-left: calc(var(--gh) * var(--folga, 0.07) * -1); margin-right: calc(var(--gh) * var(--folga, 0.07) * -1); }";
+      document.head.appendChild(estiloFolga);
+
+      const campoFolga = document.createElement("label");
+      campoFolga.innerHTML = 'Aproximar letras (%) <input type="number" id="folga" value="7" step="1" />';
+      campoFolga.querySelector("input").style.cssText = "width:70px;padding:4px";
+      $("sobe").parentNode.after(campoFolga);
+      campoFolga.querySelector("input").addEventListener("input", (e) => {
+        folhas.style.setProperty("--folga", Number(e.target.value) / 100);
+        if (gerado) gerar();
+      });
+      folhas.style.setProperty("--folga", 0.07);
+    </script>
+        <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+        signInWithPopup, GoogleAuthProvider, signOut, sendPasswordResetEmail,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      // COLE AQUI a configuração do seu projeto Firebase
+      const firebaseConfig = {
+  apiKey: "AIzaSyBO94lPxFcIkqqct3EmYnLsN1vBWTi10Q0",
+  authDomain: "letra-de-caderno.firebaseapp.com",
+  projectId: "letra-de-caderno",
+  storageBucket: "letra-de-caderno.firebasestorage.app",
+  messagingSenderId: "750939894152",
+  appId: "1:750939894152:web:0ae0eba21e435a48ba0a3d"
+};
+      // ---------- Barra do topo e janela de login ----------
+      const barra = document.createElement("div");
+      barra.className = "topo";
+      barra.innerHTML = '<div class="topo-in"><span class="marca">✍️ Letra de Caderno</span><span id="conta"></span></div>';
+      document.body.prepend(barra);
+      const conta = $("conta");
+
+      const dlg = document.createElement("dialog");
+      dlg.innerHTML =
+        '<h2 style="margin-top:0">Minha conta</h2>' +
+        '<p id="dlgMsg" role="alert" style="min-height:1.4em;font-weight:600"></p>' +
+        '<label>E-mail<input id="cEmail" type="email" autocomplete="email" /></label>' +
+        '<label>Senha (mínimo 6 caracteres)<input id="cSenha" type="password" autocomplete="current-password" /></label>' +
+        '<button id="cEntrar" class="prim">Entrar</button>' +
+        '<button id="cCriar" class="sec">Criar conta</button><br />' +
+        '<button id="cGoogle" class="sec">Entrar com Google</button>' +
+        '<button id="cEsqueci" class="sec">Esqueci a senha</button>' +
+        '<button id="cFechar" class="sec">Fechar</button>';
+      document.body.appendChild(dlg);
+
+      const dica = document.createElement("p");
+      dica.id = "dicaConta";
+      $("progresso").before(dica);
+
+      const MSG = {
+        "auth/invalid-credential": "E-mail ou senha incorretos.",
+        "auth/invalid-email": "E-mail inválido.",
+        "auth/email-already-in-use": "Esse e-mail já tem conta. Clique em Entrar.",
+        "auth/weak-password": "Senha fraca: use pelo menos 6 caracteres.",
+        "auth/missing-password": "Digite a senha.",
+        "auth/popup-closed-by-user": "A janela foi fechada antes de terminar.",
+        "auth/unauthorized-domain": "Este endereço não pode usar o login do Google. Use e-mail e senha.",
+        "auth/network-request-failed": "Sem internet.",
+      };
+      const erro = (e) => { $("dlgMsg").textContent = MSG[e.code] || "Não deu certo (" + (e.code || e.message) + ")."; };
+
+      async function principal() {
+        if (firebaseConfig.apiKey.startsWith("COLE")) {
+          conta.textContent = "Conta ainda não configurada";
+          return;
+        }
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let uid = null;
+        const idDoc = (ch) => "c" + ch.codePointAt(0);
+        const pasta = () => collection(db, "usuarios", uid, "letras");
+        const enviar = (ch) => setDoc(doc(db, "usuarios", uid, "letras", idDoc(ch)), { c: ch, u: glifos[ch].u, a: glifos[ch].a });
+
+        async function sair() {
+          await signOut(auth);
+          localStorage.removeItem("minhaLetra");
+          glifos = {};
+          contagem();
+          if (usar) escolherLetra("Caveat");
+        }
+
+        function desenharConta(user) {
+          conta.textContent = "";
+          const b = document.createElement("button");
+          if (user) {
+            const s = document.createElement("span");
+            s.className = "email";
+            s.textContent = "☁️ " + (user.email || "conectado");
+            b.className = "sec";
+            b.textContent = "Sair";
+            b.onclick = sair;
+            conta.append(s, b);
+          } else {
+            b.className = "prim";
+            b.textContent = "Entrar / Criar conta";
+            b.onclick = () => { $("dlgMsg").textContent = ""; dlg.showModal(); };
+            conta.append(b);
+          }
+          dica.textContent = user
+            ? "☁️ As suas letras são salvas na sua conta e aparecem em qualquer aparelho."
+            : "💡 Entre na sua conta para guardar a sua letra e usá-la em qualquer aparelho.";
+        }
+
+        // Entrou ou saiu: busca as letras da nuvem
+        onAuthStateChanged(auth, async (user) => {
+          uid = user ? user.uid : null;
+          desenharConta(user);
+          if (!user) return;
+          try {
+            const snap = await getDocs(pasta());
+            const nuvem = {};
+            snap.forEach((d) => { const v = d.data(); nuvem[v.c] = { u: v.u, a: v.a }; });
+            for (const ch of Object.keys(glifos).filter((c) => !nuvem[c])) await enviar(ch); // letras criadas antes do login
+            glifos = { ...glifos, ...nuvem };
+            localStorage.setItem("minhaLetra", JSON.stringify(glifos));
+            contagem();
+            if (Object.keys(glifos).length && !usar) escolherLetra("minha");
+            else if (gerado) gerar();
+          } catch (e) {
+            $("aviso").textContent = "Não consegui falar com a nuvem. As letras ficam só neste aparelho por enquanto.";
+          }
+        });
+
+        // Salvar cada letra também na nuvem
+        const recortarOriginal = recortar;
+        recortar = function () {
+          const ok = recortarOriginal();
+          if (ok && uid) {
+            enviar(CHARS[ci]).catch(() => { $("aviso").textContent = "Salva só neste aparelho (sem conexão com a nuvem)."; });
+          }
+          return ok;
+        };
+
+        // Apagar tudo (também na nuvem)
+        $("limpar").onclick = async () => {
+          if (!confirm("Apagar todas as suas letras salvas" + (uid ? ", inclusive da nuvem" : "") + "?")) return;
+          try {
+            if (uid) {
+              const snap = await getDocs(pasta());
+              await Promise.all(snap.docs.map((d) => deleteDoc(d.ref)));
+            }
+          } catch (e) {
+            $("aviso").textContent = "Não consegui apagar da nuvem.";
+            return;
+          }
+          localStorage.removeItem("minhaLetra");
+          glifos = {};
+          contagem();
+          if (usar) escolherLetra("Caveat");
+          ir(0);
+        };
+
+        // Botões da janela de login
+        const email = () => $("cEmail").value.trim();
+        const tentar = (fn) => async () => {
+          try { await fn(); dlg.close(); } catch (e) { erro(e); }
+        };
+        $("cEntrar").onclick = tentar(() => signInWithEmailAndPassword(auth, email(), $("cSenha").value));
+        $("cCriar").onclick = tentar(() => createUserWithEmailAndPassword(auth, email(), $("cSenha").value));
+        $("cGoogle").onclick = tentar(() => signInWithPopup(auth, new GoogleAuthProvider()));
+        $("cEsqueci").onclick = async () => {
+          try {
+            await sendPasswordResetEmail(auth, email());
+            $("dlgMsg").textContent = "Enviamos um e-mail para você trocar a senha.";
+          } catch (e) { erro(e); }
+        };
+        $("cFechar").onclick = () => dlg.close();
+      }
+      principal();
+    </script>
+  </body>
+</html>

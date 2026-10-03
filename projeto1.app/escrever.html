@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Escrever a minha letra na tela</title>
+    <style>
+      body { margin: 0; padding: 20px 16px; font: 18px/1.5 system-ui, sans-serif; background: #f4f6f8; color: #111; }
+      main { max-width: 700px; margin: 0 auto; }
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; margin-top: 28px; }
+      [hidden] { display: none !important; }
+      button { font-size: 20px; padding: 16px 22px; margin: 6px 8px 6px 0; border: 2px solid #0b3d91; background: #0b3d91; color: #fff; border-radius: 8px; cursor: pointer; }
+      button.sec { background: #fff; color: #0b3d91; }
+      :focus-visible { outline: 4px solid #f5a000; outline-offset: 2px; }
+      details { background: #fff; border: 1px solid #aaa; border-radius: 8px; padding: 10px 16px; }
+      summary { cursor: pointer; font-weight: 600; }
+      progress { width: 100%; height: 18px; }
+      #pedido { margin: 12px 0 6px; }
+      #grande { font-size: 56px; font-weight: 700; margin-right: 12px; }
+      #tela {
+        display: block; width: 100%; max-width: 640px; aspect-ratio: 2 / 1;
+        touch-action: none; cursor: crosshair; box-shadow: 0 0 0 2px #555; background-color: #fff;
+        background-image:
+          linear-gradient(transparent 39.4%, #64b5f6 39.4%, #64b5f6 40.6%, transparent 40.6%),
+          linear-gradient(transparent 71.2%, #e57373 71.2%, #e57373 72.8%, transparent 72.8%);
+      }
+      #aviso { font-weight: 600; min-height: 1.5em; }
+      #atual img { height: 48px; vertical-align: middle; background: #fff; border: 1px solid #aaa; }
+      #teste { width: 100%; font-size: 18px; padding: 10px; box-sizing: border-box; }
+      #saida { background: #fff; border: 1px solid #888; padding: 12px; min-height: 70px; margin-top: 8px; }
+      #saida img { height: 48px; vertical-align: -13px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="index.html">← Voltar ao site</a> · <a href="letra.html">Prefiro usar a folha impressa</a></p>
+      <h1>Escrever a minha letra na tela</h1>
+      <p>Sem impressora e sem foto. Escreva cada letra com o dedo, a caneta do tablet ou o mouse. Cada letra é salva na hora, então dá para parar e continuar depois.</p>
+
+      <details open>
+        <summary>Manual / Ajuda</summary>
+        <ol>
+          <li>Escreva o caractere pedido dentro da caixa branca.</li>
+          <li>Letras minúsculas ficam entre a linha <strong>azul</strong> (em cima) e a <strong>vermelha</strong> (embaixo). Letras altas (b, d, f, h, k, l, t) e maiúsculas sobem acima da azul. Letras com perna (g, j, p, q, y) descem abaixo da vermelha.</li>
+          <li>Clique em <strong>Salvar e próxima</strong>. Errou? Clique em <strong>Apagar</strong> e escreva de novo.</li>
+          <li>Quer só o básico? As 62 primeiras (letras e números) já bastam. Pare quando quiser: o que faltar sai com uma letra padrão.</li>
+          <li>Para usar: abra o site, aperte <strong>F5</strong> e escolha <strong>Minha letra</strong> na lista.</li>
+        </ol>
+        <p>Dicas: escreva do tamanho que você escreve no caderno e sem encostar nas bordas. Para refazer uma letra, volte até ela e escreva de novo.</p>
+      </details>
+
+      <p id="progresso" aria-live="polite"></p>
+      <progress id="barra" value="0"></progress>
+      <h2 id="pedido" aria-live="polite">Escreva: <span id="grande"></span><span id="desc"></span></h2>
+      <canvas id="tela" width="640" height="320" aria-label="Área para escrever a letra com o dedo ou o mouse"></canvas>
+      <p id="atual" hidden>Já salva: <img id="atualImg" alt="letra já salva" /> (se escrever de novo, ela será trocada)</p>
+      <p id="aviso" role="status" aria-live="polite"></p>
+      <button id="proxima">Salvar e próxima ▶</button>
+      <button id="apagar" class="sec">Apagar ✕</button>
+      <button id="voltar" class="sec">◀ Voltar</button>
+      <button id="pular" class="sec">Pular ▶▶</button>
+
+      <h2>Teste</h2>
+      <label for="teste">Digite uma frase:</label>
+      <input id="teste" value="Olá, esta é a minha letra!" />
+      <div id="saida" aria-live="polite"></div>
+      <p><button id="limpar" class="sec">Apagar todas as minhas letras</button></p>
+    </main>
+
+    <script>
+      const CHARS = [..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áàâãéêíóôõúüçÁÀÂÃÉÊÍÓÔÕÚÇ.,;:!?-()/+=×÷%\"'"];
+      const NOMES = { ".": "ponto", ",": "vírgula", ";": "ponto e vírgula", ":": "dois pontos", "!": "exclamação", "?": "interrogação", "-": "traço (hífen ou menos)", "(": "abre parênteses", ")": "fecha parênteses", "/": "barra", "+": "mais", "=": "igual", "×": "vezes", "÷": "dividido", "%": "porcentagem", '"': "aspas", "'": "apóstrofo" };
+      const $ = (id) => document.getElementById(id);
+      let salvo = {};
+      try { salvo = JSON.parse(localStorage.getItem("minhaLetra")) || {}; } catch (e) {}
+      let i = 0, riscou = false, desenhando = false, ultimo = null;
+
+      const cv = $("tela");
+      const cx = cv.getContext("2d", { willReadFrequently: true });
+      cx.lineWidth = 11;
+      cx.lineCap = "round";
+      cx.lineJoin = "round";
+      cx.strokeStyle = "#000";
+      $("barra").max = CHARS.length;
+
+      // ---------- Desenhar ----------
+      function pos(e) {
+        const r = cv.getBoundingClientRect();
+        return { x: ((e.clientX - r.left) * cv.width) / r.width, y: ((e.clientY - r.top) * cv.height) / r.height };
+      }
+      function linha(a, b) {
+        cx.beginPath();
+        cx.moveTo(a.x, a.y);
+        cx.lineTo(b.x, b.y);
+        cx.stroke();
+        riscou = true;
+      }
+      cv.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        cv.setPointerCapture(e.pointerId);
+        desenhando = true;
+        ultimo = pos(e);
+        linha(ultimo, ultimo);
+      });
+      cv.addEventListener("pointermove", (e) => {
+        if (!desenhando) return;
+        const p = pos(e);
+        linha(ultimo, p);
+        ultimo = p;
+      });
+      ["pointerup", "pointercancel", "lostpointercapture"].forEach((t) =>
+        cv.addEventListener(t, () => { desenhando = false; })
+      );
+
+      // ---------- Guardar a letra ----------
+      function descricao(ch) {
+        if (NOMES[ch]) return NOMES[ch];
+        if (/[0-9]/.test(ch)) return "número";
+        return ch === ch.toLowerCase() ? "letra minúscula" : "letra MAIÚSCULA";
+      }
+
+      function recortar() {
+        const w = cv.width, h = cv.height;
+        const d = cx.getImageData(0, 0, w, h).data;
+        let x0 = w, x1 = -1;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            if (d[4 * (y * w + x) + 3] > 40) {
+              if (x < x0) x0 = x;
+              if (x > x1) x1 = x;
+            }
+          }
+        }
+        if (x1 < 0) return false;
+        const E = 120 / h; // a letra guardada tem 120 px de altura
+        const ax = Math.max(0, x0 - 10 / E), bx = Math.min(w, x1 + 1 + 10 / E);
+        const out = document.createElement("canvas");
+        out.width = Math.round((bx - ax) * E);
+        out.height = 120;
+        out.getContext("2d").drawImage(cv, ax, 0, bx - ax, h, 0, 0, out.width, 120);
+        salvo[CHARS[i]] = { u: out.toDataURL("image/png"), a: out.width / 120 };
+        try {
+          localStorage.setItem("minhaLetra", JSON.stringify(salvo));
+        } catch (e) {
+          $("aviso").textContent = "Não consegui salvar: sem espaço no navegador.";
+          return false;
+        }
+        return true;
+      }
+
+      // ---------- Navegar ----------
+      function ir(n) {
+        i = Math.max(0, Math.min(CHARS.length - 1, n));
+        cx.clearRect(0, 0, cv.width, cv.height);
+        riscou = false;
+        const ch = CHARS[i], feitas = Object.keys(salvo).length;
+        $("grande").textContent = ch;
+        $("desc").textContent = "(" + descricao(ch) + ")";
+        $("progresso").textContent = "Caractere " + (i + 1) + " de " + CHARS.length + " · " + feitas + " salvos";
+        $("barra").value = feitas;
+        $("atual").hidden = !salvo[ch];
+        if (salvo[ch]) $("atualImg").src = salvo[ch].u;
+        $("aviso").textContent = "";
+        teste();
+      }
+
+      $("proxima").onclick = () => {
+        const salvou = riscou;
+        if (riscou) {
+          if (!recortar()) return;
+        } else if (!salvo[CHARS[i]]) {
+          $("aviso").textContent = "Escreva a letra na caixa antes de continuar (ou clique em Pular).";
+          return;
+        }
+        if (i === CHARS.length - 1) {
+          ir(i);
+          $("aviso").textContent = "Pronto! Todas as letras foram salvas. Volte ao site e aperte F5.";
+        } else {
+          ir(i + 1);
+          if (salvou) $("aviso").textContent = "Salva!";
+        }
+      };
+      $("apagar").onclick = () => { cx.clearRect(0, 0, cv.width, cv.height); riscou = false; };
+      $("voltar").onclick = () => ir(i - 1);
+      $("pular").onclick = () => ir(i + 1);
+      $("limpar").onclick = () => {
+        if (confirm("Apagar todas as suas letras salvas?")) {
+          localStorage.removeItem("minhaLetra");
+          salvo = {};
+          ir(0);
+        }
+      };
+
+      // ---------- Teste ----------
+      function teste() {
+        $("saida").textContent = "";
+        for (const ch of $("teste").value) {
+          const g = salvo[ch];
+          if (g) {
+            const im = new Image();
+            im.src = g.u;
+            im.alt = ch;
+            $("saida").appendChild(im);
+          } else {
+            $("saida").appendChild(document.createTextNode(ch));
+          }
+        }
+      }
+      $("teste").oninput = teste;
+
+      const primeira = CHARS.findIndex((c) => !salvo[c]);
+      ir(primeira < 0 ? 0 : primeira);
+      if (primeira < 0) $("aviso").textContent = "Todas as letras já estão salvas. Você pode refazer qualquer uma.";
+    </script>
+  </body>
+</html>

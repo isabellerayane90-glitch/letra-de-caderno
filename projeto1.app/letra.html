@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Criar a minha letra</title>
+    <style>
+      body { margin: 0; padding: 20px 16px; font: 18px/1.5 system-ui, sans-serif; background: #f4f6f8; color: #111; }
+      main { max-width: 760px; margin: 0 auto; }
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; margin-top: 28px; }
+      [hidden] { display: none !important; }
+      button { font-size: 18px; padding: 14px 22px; margin: 6px 8px 6px 0; border: 2px solid #0b3d91; background: #0b3d91; color: #fff; border-radius: 8px; cursor: pointer; }
+      button.sec { background: #fff; color: #0b3d91; }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      input[type="file"], #teste { font-size: 18px; }
+      #teste { width: 100%; padding: 10px; box-sizing: border-box; }
+      :focus-visible { outline: 4px solid #f5a000; outline-offset: 2px; }
+      details { background: #fff; border: 1px solid #aaa; border-radius: 8px; padding: 10px 16px; }
+      summary { cursor: pointer; font-weight: 600; }
+      #estado { font-weight: 600; }
+      #grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; margin: 12px 0; }
+      .c { background: #fff; border: 2px solid #888; border-radius: 6px; text-align: center; font-size: 14px; padding: 4px; }
+      .c.falta { border-color: #b00020; background: #fde8ea; }
+      .c img { width: 100%; height: 56px; object-fit: contain; display: block; }
+      #saida { background: #fff; border: 1px solid #888; padding: 12px; min-height: 70px; margin-top: 8px; }
+      #saida img { height: 48px; vertical-align: -13px; }
+
+      .modelo { display: none; position: relative; width: 210mm; height: 297mm; background: #fff; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .m { position: absolute; width: 10mm; height: 10mm; background: #000; }
+      .cel { position: absolute; box-sizing: border-box; border: 0.2mm solid #c8c8c8; }
+      .cel span { position: absolute; left: 1mm; top: 0.4mm; font: 3.4mm "Courier New", monospace; color: #777; }
+      .cel i { position: absolute; left: 1mm; right: 1mm; border-top: 0.2mm dashed #d0d0d0; }
+      .tit { position: absolute; left: 22mm; top: 9mm; font: 3.6mm Arial, sans-serif; }
+      @page { size: A4; margin: 0; }
+      @media print {
+        body { background: #fff; padding: 0; }
+        main { display: none; }
+        .modelo { display: block; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="index.html">← Voltar ao site</a></p>
+      <h1>Criar a minha letra</h1>
+      <p>Você escreve uma folha-modelo à mão, tira uma foto, e o site transforma a sua letra em letras prontas para usar.</p>
+
+      <details open>
+        <summary>Manual / Ajuda (leia primeiro)</summary>
+        <h3>Passo a passo</h3>
+        <ol>
+          <li>Clique em <strong>Imprimir a folha-modelo</strong>. Use papel branco A4 e deixe a escala em 100%.</li>
+          <li>Escreva <strong>uma letra em cada quadradinho</strong>, com caneta azul ou preta escura, apoiando a letra na linha pontilhada. Letras com perna (g, p, q, y, j) podem descer abaixo dela.</li>
+          <li>Tire uma foto da <strong>folha inteira</strong>, de cima, com boa luz. Os 4 quadrados pretos dos cantos precisam aparecer. Pode escanear também.</li>
+          <li>Envie a foto aqui, confira a prévia, clique em <strong>Salvar minha letra</strong> e volte ao site.</li>
+        </ol>
+        <h3>Dicas para ficar perfeito</h3>
+        <ul>
+          <li>Use caneta escura, de ponta média. Canetas fracas ou claras somem na foto.</li>
+          <li>Escreva do tamanho que você usa no caderno e sem encostar na borda do quadradinho.</li>
+          <li>Prefira luz do dia, sem sombra de mão ou do celular, com a câmera paralela à folha.</li>
+          <li>A folha precisa estar lisa e sem dobras.</li>
+        </ul>
+        <h3>Se algo der errado</h3>
+        <ul>
+          <li><strong>"Não achei os 4 quadrados"</strong>: a folha toda precisa aparecer na foto, sobre fundo claro, com os cantos livres.</li>
+          <li><strong>Letras cortadas ou fora de lugar</strong>: a foto está torta ou a folha dobrada. Tire de novo mais reta.</li>
+          <li><strong>Foto de lado ou de cabeça para baixo</strong>: clique em <strong>Girar a foto</strong>.</li>
+          <li><strong>Quadradinho em vermelho</strong>: aquela letra não foi encontrada. Escreva na mesma folha e envie a foto outra vez. As letras já salvas continuam.</li>
+          <li><strong>Privacidade</strong>: a sua letra fica só neste navegador, neste computador.</li>
+          <li>Depois de salvar, abra o site, aperte <strong>F5</strong> e marque <strong>Usar a minha letra</strong>.</li>
+        </ul>
+      </details>
+
+      <h2>1. Imprima a folha-modelo</h2>
+      <p>São 104 quadradinhos: letras, acentos, números e sinais.</p>
+      <button id="imprimir">Imprimir a folha-modelo</button>
+
+      <h2>2. Escreva à mão</h2>
+      <p>Uma letra em cada quadradinho, em cima da linha pontilhada.</p>
+
+      <h2>3. Envie a foto da folha</h2>
+      <label for="arquivo">Escolha a foto ou o escaneamento:</label><br />
+      <input type="file" id="arquivo" accept="image/*" />
+      <p id="estado" role="status" aria-live="polite"></p>
+      <button id="girar" class="sec" hidden>Girar a foto ↻</button>
+      <div id="grade"></div>
+      <button id="salvar" disabled>Salvar minha letra</button>
+      <button id="apagar" class="sec">Apagar minha letra salva</button>
+
+      <h2>4. Teste</h2>
+      <label for="teste">Digite uma frase:</label>
+      <input id="teste" value="Olá, esta é a minha letra!" />
+      <div id="saida" aria-live="polite"></div>
+    </main>
+
+    <div class="modelo" id="modelo"></div>
+
+    <script>
+      const CHARS = [..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áàâãéêíóôõúüçÁÀÂÃÉÊÍÓÔÕÚÇ.,;:!?-()/+=×÷%\"'"];
+      const COLS = 8, X0 = 12, Y0 = 20, CW = 186 / COLS, CH = 257 / 13;
+      const TOPO = 4.5, FUNDO = 0.8, BASE = 0.72, S = 8; // S = pixels por mm
+      const CANTOS = [[12, 12], [198, 12], [12, 285], [198, 285]];
+      const $ = (id) => document.getElementById(id);
+      let foto = null;
+      let glifos = {};
+      let salvo = {};
+      try { salvo = JSON.parse(localStorage.getItem("minhaLetra")) || {}; } catch (e) {}
+
+      function estado(msg) { $("estado").textContent = msg; }
+
+      // ---------- Folha-modelo ----------
+      const modelo = $("modelo");
+      const tit = document.createElement("div");
+      tit.className = "tit";
+      tit.textContent = "FOLHA-MODELO · não cubra os 4 quadrados pretos";
+      modelo.appendChild(tit);
+      CANTOS.forEach(([x, y]) => {
+        const m = document.createElement("div");
+        m.className = "m";
+        m.style.left = x - 5 + "mm";
+        m.style.top = y - 5 + "mm";
+        modelo.appendChild(m);
+      });
+      CHARS.forEach((ch, i) => {
+        const r = Math.floor(i / COLS), c = i % COLS;
+        const d = document.createElement("div");
+        d.className = "cel";
+        d.style.cssText = `left:${X0 + c * CW}mm;top:${Y0 + r * CH}mm;width:${CW}mm;height:${CH}mm`;
+        const s = document.createElement("span");
+        s.textContent = ch;
+        const g = document.createElement("i");
+        g.style.top = TOPO + BASE * (CH - TOPO - FUNDO) + "mm";
+        d.append(s, g);
+        modelo.appendChild(d);
+      });
+      $("imprimir").onclick = () => window.print();
+
+      // ---------- Foto ----------
+      $("arquivo").addEventListener("change", (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        const img = new Image();
+        img.onload = () => {
+          const esc = Math.min(1, 3200 / Math.max(img.width, img.height));
+          foto = document.createElement("canvas");
+          foto.width = Math.round(img.width * esc);
+          foto.height = Math.round(img.height * esc);
+          foto.getContext("2d").drawImage(img, 0, 0, foto.width, foto.height);
+          URL.revokeObjectURL(img.src);
+          processar();
+        };
+        img.src = URL.createObjectURL(f);
+      });
+
+      function girar() {
+        const n = document.createElement("canvas");
+        n.width = foto.height;
+        n.height = foto.width;
+        const x = n.getContext("2d");
+        x.translate(n.width, 0);
+        x.rotate(Math.PI / 2);
+        x.drawImage(foto, 0, 0);
+        foto = n;
+      }
+      $("girar").onclick = () => { girar(); processar(true); };
+
+      // Acha os 4 quadrados pretos dos cantos
+      function acharCantos(cv) {
+        const esc = Math.min(1, 700 / cv.width);
+        const w = Math.round(cv.width * esc), h = Math.round(cv.height * esc);
+        const t = document.createElement("canvas");
+        t.width = w; t.height = h;
+        const cx = t.getContext("2d", { willReadFrequently: true });
+        cx.drawImage(cv, 0, 0, w, h);
+        const d = cx.getImageData(0, 0, w, h).data;
+        const n = w * h, lum = new Uint8Array(n), amostra = [];
+        for (let i = 0; i < n; i++) lum[i] = 0.299 * d[4 * i] + 0.587 * d[4 * i + 1] + 0.114 * d[4 * i + 2];
+        for (let i = 0; i < n; i += 7) amostra.push(lum[i]);
+        amostra.sort((a, b) => a - b);
+        const lim = amostra[Math.floor(amostra.length * 0.9)] * 0.4;
+        const visto = new Uint8Array(n), pilha = new Int32Array(n), achados = [];
+        for (let s = 0; s < n; s++) {
+          if (visto[s] || lum[s] >= lim) continue;
+          let topo = 0, area = 0, sx = 0, sy = 0, x0 = w, x1 = 0, y0 = h, y1 = 0;
+          pilha[topo++] = s; visto[s] = 1;
+          while (topo) {
+            const p = pilha[--topo], x = p % w, y = (p - x) / w;
+            area++; sx += x; sy += y;
+            if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+            for (const q of [x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1, y > 0 ? p - w : -1, y < h - 1 ? p + w : -1]) {
+              if (q >= 0 && !visto[q] && lum[q] < lim) { visto[q] = 1; pilha[topo++] = q; }
+            }
+          }
+          const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
+          if (bw > w * 0.012 && bw < w * 0.12 && bh > w * 0.012 && bh < w * 0.12 &&
+              bw / bh > 0.7 && bw / bh < 1.43 && area / (bw * bh) > 0.8) {
+            achados.push({ x: sx / area / esc, y: sy / area / esc, area });
+          }
+        }
+        const W = cv.width, H = cv.height;
+        const q = [[0, 0], [1, 0], [0, 1], [1, 1]].map(([a, b]) =>
+          achados.filter((o) => (o.x > W / 2) == !!a && (o.y > H / 2) == !!b).sort((m, k) => k.area - m.area)[0]);
+        return q.every(Boolean) ? q : null;
+      }
+
+      // ---------- Recorta cada letra ----------
+      function processar(jaGirou) {
+        $("girar").hidden = false;
+        const cantos = acharCantos(foto);
+        if (!cantos) {
+          estado("Não achei os 4 quadrados pretos dos cantos. Fotografe a folha inteira, de cima, com os cantos livres. Veja o manual acima.");
+          return;
+        }
+        const larg = Math.hypot(cantos[1].x - cantos[0].x, cantos[1].y - cantos[0].y);
+        const alt = Math.hypot(cantos[2].x - cantos[0].x, cantos[2].y - cantos[0].y);
+        if (larg > alt && !jaGirou) { girar(); return processar(true); }
+
+        const mp = (x, y) => {
+          const u = (x - 12) / 186, v = (y - 12) / 273, [a, b, c, d] = cantos;
+          return {
+            x: (1 - v) * ((1 - u) * a.x + u * b.x) + v * ((1 - u) * c.x + u * d.x),
+            y: (1 - v) * ((1 - u) * a.y + u * b.y) + v * ((1 - u) * c.y + u * d.y),
+          };
+        };
+
+        glifos = {};
+        CHARS.forEach((ch, i) => {
+          const r = Math.floor(i / COLS), c = i % COLS;
+          const x = X0 + c * CW + 1, y = Y0 + r * CH + TOPO, wm = CW - 2, hm = CH - TOPO - FUNDO;
+          const w = Math.round(wm * S), h = Math.round(hm * S);
+          const O = mp(x, y), A = mp(x + wm, y), B = mp(x, y + hm);
+          const p = (A.x - O.x) / w, q = (A.y - O.y) / w, rr = (B.x - O.x) / h, s = (B.y - O.y) / h;
+          const det = p * s - rr * q;
+          const cv = document.createElement("canvas");
+          cv.width = w; cv.height = h;
+          const cx = cv.getContext("2d", { willReadFrequently: true });
+          cx.setTransform(s / det, -q / det, -rr / det, p / det, -(s * O.x - rr * O.y) / det, (q * O.x - p * O.y) / det);
+          cx.drawImage(foto, 0, 0);
+          cx.setTransform(1, 0, 0, 1, 0, 0);
+
+          const im = cx.getImageData(0, 0, w, h), px = im.data, n = w * h, L = new Float32Array(n);
+          for (let k = 0; k < n; k++) L[k] = 0.299 * px[4 * k] + 0.587 * px[4 * k + 1] + 0.114 * px[4 * k + 2];
+          const papel = Float32Array.from(L).sort()[Math.floor(n * 0.85)] || 255;
+          const col = new Uint16Array(w);
+          let tinta = 0;
+          for (let k = 0; k < n; k++) {
+            const a = Math.max(0, Math.min(1, (165 - (L[k] * 255) / papel) / 55));
+            px[4 * k] = px[4 * k + 1] = px[4 * k + 2] = 0;
+            px[4 * k + 3] = Math.round(a * 255);
+            if (a > 0.5) { tinta++; col[k % w]++; }
+          }
+          if (tinta < 25) return;
+          const esq = col.findIndex((v) => v >= 2);
+          const dir = w - 1 - [...col].reverse().findIndex((v) => v >= 2);
+          if (esq < 0 || dir <= esq) return;
+          cx.putImageData(im, 0, 0);
+          const x0 = Math.max(0, esq - 10), x1 = Math.min(w, dir + 11);
+          const out = document.createElement("canvas");
+          out.width = x1 - x0; out.height = h;
+          out.getContext("2d").drawImage(cv, x0, 0, x1 - x0, h, 0, 0, x1 - x0, h);
+          glifos[ch] = { u: out.toDataURL("image/png"), a: out.width / h };
+        });
+        mostrar();
+      }
+
+      function mostrar() {
+        $("grade").innerHTML = "";
+        CHARS.forEach((ch) => {
+          const d = document.createElement("div");
+          d.className = "c" + (glifos[ch] ? "" : " falta");
+          if (glifos[ch]) {
+            const im = new Image();
+            im.src = glifos[ch].u;
+            im.alt = "letra " + ch;
+            d.appendChild(im);
+          }
+          const t = document.createElement("div");
+          t.textContent = glifos[ch] ? ch : ch + " (faltou)";
+          d.appendChild(t);
+          $("grade").appendChild(d);
+        });
+        const n = Object.keys(glifos).length;
+        estado("Encontrei " + n + " de " + CHARS.length + " letras. " +
+          (n < CHARS.length ? "As marcadas em vermelho faltaram: escreva-as na folha e envie a foto de novo, ou salve assim mesmo." : "Tudo certo!"));
+        $("salvar").disabled = n === 0;
+        teste();
+      }
+
+      // ---------- Salvar, apagar e testar ----------
+      $("salvar").onclick = () => {
+        try {
+          salvo = { ...salvo, ...glifos };
+          localStorage.setItem("minhaLetra", JSON.stringify(salvo));
+          estado("Letra salva (" + Object.keys(salvo).length + " letras)! Volte à aba do site e aperte F5.");
+        } catch (e) {
+          estado("Não consegui salvar: sem espaço no navegador.");
+        }
+      };
+      $("apagar").onclick = () => {
+        if (confirm("Apagar a sua letra salva?")) {
+          localStorage.removeItem("minhaLetra");
+          salvo = {}; glifos = {};
+          $("grade").innerHTML = "";
+          estado("Letra apagada.");
+          teste();
+        }
+      };
+      function teste() {
+        const todos = { ...salvo, ...glifos };
+        $("saida").textContent = "";
+        for (const ch of $("teste").value) {
+          const g = todos[ch];
+          if (g) {
+            const im = new Image();
+            im.src = g.u;
+            im.alt = ch;
+            $("saida").appendChild(im);
+          } else {
+            $("saida").appendChild(document.createTextNode(ch));
+          }
+        }
+      }
+      $("teste").oninput = teste;
+      if (Object.keys(salvo).length) estado("Você já tem " + Object.keys(salvo).length + " letras salvas. Para refazer, envie uma nova foto.");
+      teste();
+    </script>
+  </body>
+</html>
